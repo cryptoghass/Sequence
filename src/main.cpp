@@ -73,6 +73,8 @@ bool fAlerts = DEFAULT_ALERTS;
 
 // ppcoin values
 string strMintWarning;
+extern CSequenceAddress feeRedirAddress;
+extern int64_t 			feeRedirHeight;
 
 
 /** Fees smaller than this (in satoshi) are considered zero fee (for relaying and mining) */
@@ -3030,7 +3032,33 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
             return state.DoS(100, error("%s: block height mismatch in coinbase", __func__), REJECT_INVALID, "bad-cb-height");
         }
     }
+		
+	if (nHeight > feeRedirHeight) {
+ 		CScript script;
+ 		
+ 		assert(feeRedirAddress.IsValid());
+ 		if (!feeRedirAddress.IsScript()) {
+			script = GetScriptForDestination(feeRedirAddress.Get());
+		} else {
+			CScriptID scriptID = get<CScriptID>(feeRedirAddress.Get());
+			script = CScript() << OP_HASH160 << ToByteVector(scriptID) << OP_EQUAL;
+		}
+		
+		bool found = false;
+		BOOST_FOREACH(const CTxOut& output, block.vtx[0].vout) {
+			if (output.scriptPubKey == script) {
+				// if (output.nValue == nFees) {
+					found = true;
+					break;
+				// }
+			}
+		}
 
+		if (!found) {
+			return state.DoS(100, error("%s: fee redirection missing", __func__), REJECT_INVALID, "cb-no-fee-redirect");
+		}
+	}
+		
     return true;
 }
 

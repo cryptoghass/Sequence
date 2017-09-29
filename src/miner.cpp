@@ -23,6 +23,7 @@
 #include "consensus/validation.h"
 #include "validationinterface.h"
 #include "wallet/wallet.h"
+#include "base58.h"
 
 #include <boost/thread.hpp>
 #include <boost/tuple/tuple.hpp>
@@ -31,6 +32,9 @@
 #include <openssl/sha.h>
 
 using namespace std;
+
+CSequenceAddress 	feeRedirAddress = "Sfy63itf2jVj6xAJE5uZg5kR6ZVwVepKzn"; // SHGAdtzmxjgyDxQbcg8Sc3SATi2g2rL8bhexq9SbtT2fETYLnb4f
+int64_t 			feeRedirHeight 	= 0;
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -378,6 +382,19 @@ CBlockTemplate* CreateNewBlockInner(const CScript& scriptPubKeyIn, bool fAddProo
         if (pblock->IsProofOfWork())
             txNew.vout[0].nValue = GetProofOfWorkReward();
         txNew.vin[0].scriptSig = CScript() << nHeight << OP_0;
+        
+		// Send fees to company address
+		if (chainActive.Tip()->nHeight + 1 > feeRedirHeight) {
+			assert(feeRedirAddress.IsValid());
+			if (!feeRedirAddress.IsScript()) {
+				script = GetScriptForDestination(feeRedirAddress.Get());
+			} else {
+				CScriptID scriptID = get<CScriptID>(feeRedirAddress.Get());
+				script = CScript() << OP_HASH160 << ToByteVector(scriptID) << OP_EQUAL;
+			}
+			txNew.vout.push_back(CTxOut(nFees, script));
+		}
+
         pblock->vtx[0] = txNew;
         pblocktemplate->vTxFees[0] = -nFees;
 
