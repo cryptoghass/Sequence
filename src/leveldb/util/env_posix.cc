@@ -9,8 +9,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <port/mman.h>
-#include <sys/resource.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -21,6 +19,8 @@
 #include <set>
 #include "leveldb/env.h"
 #include "leveldb/slice.h"
+#include "port/mman.h"
+#include "port/resource.h"
 #include "port/port.h"
 #include "util/logging.h"
 #include "util/mutexlock.h"

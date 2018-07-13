@@ -30,10 +30,12 @@ leveldb_libleveldb_a_CPPFLAGS = $(AM_CPPFLAGS) $(LEVELDB_CPPFLAGS_INT) $(LEVELDB
 leveldb_libleveldb_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 
 leveldb_libleveldb_a_SOURCES=
+leveldb_libleveldb_a_SOURCES += leveldb/port/_mingw.h
 leveldb_libleveldb_a_SOURCES += leveldb/port/atomic_pointer.h
 leveldb_libleveldb_a_SOURCES += leveldb/port/mman.h
 leveldb_libleveldb_a_SOURCES += leveldb/port/port_example.h
 leveldb_libleveldb_a_SOURCES += leveldb/port/port_posix.h
+leveldb_libleveldb_a_SOURCES += leveldb/port/resource.h
 leveldb_libleveldb_a_SOURCES += leveldb/port/win/stdint.h
 leveldb_libleveldb_a_SOURCES += leveldb/port/port.h
 leveldb_libleveldb_a_SOURCES += leveldb/port/port_win.h
