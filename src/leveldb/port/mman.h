@@ -7,7 +7,7 @@
 #define _SYS_MMAN_H_
 
 /* All the headers include this file. */
-#include <_mingw.h>
+#include "_mingw.h"
 
 #include <sys/types.h>
 
