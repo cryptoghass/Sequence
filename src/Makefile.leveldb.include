@@ -31,6 +31,7 @@ leveldb_libleveldb_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 
 leveldb_libleveldb_a_SOURCES=
 leveldb_libleveldb_a_SOURCES += leveldb/port/atomic_pointer.h
+leveldb_libleveldb_a_SOURCES += leveldb/port/mman.h
 leveldb_libleveldb_a_SOURCES += leveldb/port/port_example.h
 leveldb_libleveldb_a_SOURCES += leveldb/port/port_posix.h
 leveldb_libleveldb_a_SOURCES += leveldb/port/win/stdint.h
@@ -126,6 +127,7 @@ leveldb_libleveldb_a_SOURCES += leveldb/util/status.cc
 
 if TARGET_WINDOWS
 leveldb_libleveldb_a_SOURCES += leveldb/util/env_win.cc
+leveldb_libleveldb_a_SOURCES += leveldb/port/mman.c
 leveldb_libleveldb_a_SOURCES += leveldb/port/port_win.cc
 else
 leveldb_libleveldb_a_SOURCES += leveldb/port/port_posix.cc
